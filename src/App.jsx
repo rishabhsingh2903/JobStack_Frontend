@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { NavLink, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import './App.css';
 import "./styles.css";
 import HomePage from './Components/HomePage';

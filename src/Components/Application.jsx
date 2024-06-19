@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import ApplicationForm from './ApplicationForm';
 import { useNavigate } from 'react-router-dom';
+import ApplicationCard from './ApplicationCard';
+import SearchBar from './SearchBar';
 
 const Application = () => {
   const [applications, setApplications] = useState([]);
@@ -13,7 +15,7 @@ const Application = () => {
   const checkTokenExpiry = async (response) => {
     if (!response.ok) {
       const data = await response.json();
-      if (data === "Invalid token") {
+      if (data === 'Invalid token') {
         localStorage.removeItem('token');
         navigate('/');
       } else {
@@ -24,12 +26,13 @@ const Application = () => {
   };
 
   // Get applications
-  const getApplications = async () => {
+  const getApplications = async (searchKeyword = '') => {
     try {
-      const response = await fetch('http://localhost:8000/api/applications/', {
+      const url = searchKeyword ? `http://localhost:8000/api/applications/search?query=${searchKeyword}` : 'http://localhost:8000/api/applications/';
+      const response = await fetch(url, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
@@ -49,7 +52,7 @@ const Application = () => {
       const response = await fetch('http://localhost:8000/api/applications/add', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(newApplication),
@@ -68,18 +71,39 @@ const Application = () => {
     const toDelete = del.filter(app => app.isChecked).map(app => app.id);
     try {
       console.log(toDelete);
-      const response = await fetch("http://localhost:8000/api/applications/delete", {
-        method: "DELETE",
+      const response = await fetch('http://localhost:8000/api/applications/delete', {
+        method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': "application/json",
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ ids: toDelete }),
       });
 
-      const data = await checkTokenExpiry(response);
-      console.log(data);
+      await checkTokenExpiry(response);
       setRefresh(!refresh);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // Update application
+  const updateApplication = async (id, status) => {
+    try {
+      const response = await fetch('http://localhost:8000/api/applications/edit', {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id,
+          status,
+        }),
+      });
+
+      await checkTokenExpiry(response);
+      setRefresh(!refresh); // Refresh the application list to show the updated status
     } catch (err) {
       console.log(err);
     }
@@ -91,6 +115,10 @@ const Application = () => {
     console.log(updatedDel);
   };
 
+  const handleSearch = (searchKeyword) => {
+    getApplications(searchKeyword);
+  };
+
   useEffect(() => {
     getApplications();
   }, [refresh]);
@@ -100,7 +128,8 @@ const Application = () => {
       <h1 className="text-center text-2xl font-bold mt-8 mb-4">Applications</h1>
       <div className="flex justify-between mb-4">
         <button className="bg-secondary text-white px-4 py-2 rounded cursor-pointer" onClick={() => setShowForm(true)}>Add</button>
-        <button className='bg-primary text-white px-4 py-2 rounded cursor-pointer' onClick={() => DeleteApplication()}>Delete</button>
+        <SearchBar onSearch={handleSearch} />
+        <button className='bg-primary text-white px-4 py-2 rounded cursor-pointer' onClick={DeleteApplication}>Delete</button>
       </div>
       <div className="grid grid-cols-1">
         <div className="flex items-center justify-between p-4 border border-quaternary rounded bg-tertiary text-light">
@@ -115,21 +144,14 @@ const Application = () => {
         {applications.length === 0 ? (
           <div className="text-center text-secondary">No applications started</div>
         ) : (
-          applications.map((app) => (
-            <div key={app._id} className="flex items-center justify-between p-4 border border-quaternary rounded cursor-pointer hover:bg-light">
-              <div className="flex items-center space-x-4 w-full">
-                <input
-                  type="checkbox"
-                  id={app._id}
-                  className="w-1/6 form-checkbox text-primary"
-                  checked={del.find(item => item.id === app._id)?.isChecked || false}
-                  onChange={() => handleCheckboxChange(app._id)}
-                />
-                <div className="w-2/6 font-bold text-primary">{app.jobTitle}</div>
-                <div className="w-2/6 text-secondary">{app.companyName}</div>
-                <div className="w-1/6 text-tertiary">{app.status}</div>
-              </div>
-            </div>
+          applications.map(app => (
+            <ApplicationCard
+              key={app._id}
+              app={app}
+              isChecked={del.find(item => item.id === app._id)?.isChecked || false}
+              handleCheckboxChange={handleCheckboxChange}
+              updateApplication={updateApplication} // Pass update function to ApplicationCard
+            />
           ))
         )}
       </div>
