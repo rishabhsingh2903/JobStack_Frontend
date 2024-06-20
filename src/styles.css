@@ -91,3 +91,24 @@
   .backdrop-blur {
     backdrop-filter: blur(4px);
   }
+
+  body {
+    margin: 0;
+    padding-bottom: 60px; /* Adjust this value to match the height of your footer */
+  }
+  
+  .footer {
+    background-color: #f8f9fa;
+    text-align: center;
+    padding: 1rem 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  
+  .footer p {
+    margin: 0;
+    color: #6c757d;
+  }

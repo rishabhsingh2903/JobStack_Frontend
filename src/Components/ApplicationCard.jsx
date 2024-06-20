@@ -30,6 +30,12 @@ const ApplicationCard = ({ app, isChecked, handleCheckboxChange, updateApplicati
     await updateApplication(app._id, newStatus); // Call the updateApplication function to save the new status
   };
 
+  const descriptionParagraphs = app.description.split('\n').map((paragraph, index) => (
+    <p key={index} className="text-tertiary mb-2">
+      {paragraph}
+    </p>
+  ));
+
   return (
     <div
       key={app._id}
@@ -60,8 +66,9 @@ const ApplicationCard = ({ app, isChecked, handleCheckboxChange, updateApplicati
           <div className="text-center text-secondary text-xl mb-4 font-bold uppercase">
             {app.companyName}
           </div>
-          <div className="text-tertiary mb-4">
-            <strong>Description:</strong> {app.description}
+          <div className="mb-4">
+            <strong>Description:</strong>
+            {descriptionParagraphs}
           </div>
           <div className="text-tertiary">
             <strong>Status:</strong> {app.status}
