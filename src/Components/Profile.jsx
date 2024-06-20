@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { baseUrl } from '../url';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -27,7 +28,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/users/profile', {
+        const response = await fetch(`${baseUrl}/api/users/profile`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -56,7 +57,7 @@ const Profile = () => {
 
   const handleSaveClick = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/users/update', {
+      const response = await fetch(`${baseUrl}/api/users/update`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -81,7 +82,7 @@ const Profile = () => {
   const handleDeleteClick = async () => {
     if (window.confirm('Are you sure you want to delete your account?')) {
       try {
-        const response = await fetch('http://localhost:8000/api/users/delete', {
+        const response = await fetch(`${baseUrl}/api/users/delete`, {
           method: 'DELETE',
           headers: {
             Authorization: `Bearer ${token}`,

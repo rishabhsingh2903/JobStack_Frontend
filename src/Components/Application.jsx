@@ -3,6 +3,7 @@ import ApplicationForm from './ApplicationForm';
 import { useNavigate } from 'react-router-dom';
 import ApplicationCard from './ApplicationCard';
 import SearchBar from './SearchBar';
+import { baseUrl } from '../url';
 
 const Application = () => {
   const [applications, setApplications] = useState([]);
@@ -28,7 +29,7 @@ const Application = () => {
   // Get applications
   const getApplications = async (searchKeyword = '') => {
     try {
-      const url = searchKeyword ? `http://localhost:8000/api/applications/search?query=${searchKeyword}` : 'http://localhost:8000/api/applications/';
+      const url = searchKeyword ? `${baseUrl}/api/applications/search?query=${searchKeyword}` : `${baseUrl}/api/applications/`;
       const response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -49,7 +50,7 @@ const Application = () => {
   // Add application
   const handleFormSubmit = async (newApplication) => {
     try {
-      const response = await fetch('http://localhost:8000/api/applications/add', {
+      const response = await fetch(`${baseUrl}/api/applications/add`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -71,7 +72,7 @@ const Application = () => {
     const toDelete = del.filter(app => app.isChecked).map(app => app.id);
     try {
       console.log(toDelete);
-      const response = await fetch('http://localhost:8000/api/applications/delete', {
+      const response = await fetch(`${baseUrl}/api/applications/delete`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -90,7 +91,7 @@ const Application = () => {
   // Update application
   const updateApplication = async (id, status) => {
     try {
-      const response = await fetch('http://localhost:8000/api/applications/edit', {
+      const response = await fetch(`${baseUrl}/api/applications/edit`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,

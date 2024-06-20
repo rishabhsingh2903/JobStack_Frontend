@@ -1,0 +1,1 @@
+export const baseUrl = "https://jobstack-3d9b.onrender.com"

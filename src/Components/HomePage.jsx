@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Form from './Form';
 import logo from '../assets/logo-trans.png';
+import { baseUrl } from '../url';
 
 const HomePage = ({ handleLogin }) => {
   const [username, setUsername] = useState('');
@@ -16,7 +17,7 @@ const HomePage = ({ handleLogin }) => {
 
     if (type === 'SIGN UP') {
       try {
-        const response = await fetch('http://localhost:8000/api/auth/register', {
+        const response = await fetch(`${baseUrl}/api/auth/register`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -44,7 +45,7 @@ const HomePage = ({ handleLogin }) => {
       }
     } else if (type === 'SIGN IN') {
       try {
-        const response = await fetch('http://localhost:8000/api/auth/login', {
+        const response = await fetch(`${baseUrl}/api/auth/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
