@@ -1,12 +1,12 @@
 {
-  // "homepage": "https://rishabhsingh2903.github.io/JobStack_Frontend",
+  "homepage": "https://rishabhsingh2903.github.io/JobStack_Frontend",
   "name": "jobstack",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    // "predeploy":"npm run build",
-    // "deploy":"gh-pages -d dist",
+    "gh-pages-build": "vite build --base=/JobStack_Frontend/",
+    "gh-pages-deploy": "gh-pages -d dist",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
